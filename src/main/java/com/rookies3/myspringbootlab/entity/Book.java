@@ -8,6 +8,9 @@ import java.time.LocalDate;
 @Entity
 @Table(name = "books")
 @Getter @Setter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Book {
     
     @Id
@@ -27,4 +30,7 @@ public class Book {
 
     private LocalDate publishDate;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "publisher_id", nullable = false)
+    private Publisher publisher;
 }
