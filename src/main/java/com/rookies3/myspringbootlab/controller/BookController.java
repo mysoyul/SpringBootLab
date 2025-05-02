@@ -31,7 +31,7 @@ public class BookController {
                 .orElse(ResponseEntity.notFound().build());
     }
     
-    // ISBN으로 도서 조회
+    // ISBN 으로 도서 조회
     @GetMapping("/isbn/{isbn}")
     public ResponseEntity<Book> getBookByIsbn(@PathVariable String isbn) {
         Optional<Book> book = bookRepository.findByIsbn(isbn);
@@ -58,7 +58,7 @@ public class BookController {
         if (!bookRepository.existsById(id)) {
             return ResponseEntity.notFound().build();
         }
-        //book.setId(id); // ID 설정
+        book.setId(id); // ID 설정
         Book updatedBook = bookRepository.save(book);
         return ResponseEntity.ok(updatedBook);
     }
