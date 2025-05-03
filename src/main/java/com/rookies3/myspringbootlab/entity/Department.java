@@ -3,30 +3,26 @@ package com.rookies3.myspringbootlab.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name = "publishers")
-@Getter @Setter
-@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Publisher {
+@Builder @Getter @Setter
+public class Department {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "publisher_id")
+    @Column(name = "department_id")
     private Long id;
     
     @Column(nullable = false)
     private String name;
     
-    private LocalDate establishedDate;
+    @Column(unique = true, nullable = false)
+    private String code;
     
-    private String address;
-    
-    @OneToMany(mappedBy = "publisher", cascade = CascadeType.ALL)
-    private List<Book> books = new ArrayList<>();
+    @OneToMany(mappedBy = "department", cascade = CascadeType.ALL)
+    private List<Student> students = new ArrayList<>();
 }
