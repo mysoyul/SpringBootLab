@@ -54,7 +54,8 @@ public class BookController {
     
     // 도서 정보 수정
     @PutMapping("/{id}")
-    public ResponseEntity<Book> updateBook(@PathVariable Long id, @RequestBody Book book) {
+    public ResponseEntity<Book> updateBook(@PathVariable Long id,
+                                           @RequestBody Book book) {
         if (!bookRepository.existsById(id)) {
             return ResponseEntity.notFound().build();
         }
