@@ -1,5 +1,6 @@
 package com.rookies3.myspringbootlab.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -22,7 +23,8 @@ public class Department {
     
     @Column(unique = true, nullable = false)
     private String code;
-    
-    @OneToMany(mappedBy = "department", cascade = CascadeType.ALL)
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "department", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Student> students = new ArrayList<>();
 }

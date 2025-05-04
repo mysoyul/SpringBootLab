@@ -1,6 +1,7 @@
 package com.rookies3.myspringbootlab.controller;
 
 import com.rookies3.myspringbootlab.entity.Department;
+import com.rookies3.myspringbootlab.entity.dto.DepartmentVM;
 import com.rookies3.myspringbootlab.exception.BusinessException;
 import com.rookies3.myspringbootlab.repository.DepartmentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -77,5 +78,10 @@ public class DepartmentController {
         }
         Long count = departmentRepository.countStudentsByDepartmentId(id);
         return ResponseEntity.ok(Map.of("count", count));
+    }
+
+    @GetMapping(value = "/name/{name}")
+    public DepartmentVM getDepartmentByName(@PathVariable String name) {
+        return departmentRepository.findByName(name);
     }
 }
