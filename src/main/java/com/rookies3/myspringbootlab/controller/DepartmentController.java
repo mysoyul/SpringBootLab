@@ -1,7 +1,7 @@
 package com.rookies3.myspringbootlab.controller;
 
 import com.rookies3.myspringbootlab.entity.Department;
-import com.rookies3.myspringbootlab.entity.dto.DepartmentVM;
+import com.rookies3.myspringbootlab.entity.viewmodel.DepartmentVM;
 import com.rookies3.myspringbootlab.exception.BusinessException;
 import com.rookies3.myspringbootlab.repository.DepartmentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -84,4 +84,10 @@ public class DepartmentController {
     public DepartmentVM getDepartmentByName(@PathVariable String name) {
         return departmentRepository.findByName(name);
     }
+
+    @GetMapping(value = "/code/{code}")
+    public DepartmentVM getDepartmentByCode(@PathVariable String code) {
+        return departmentRepository.findByCode(code);
+    }
+
 }

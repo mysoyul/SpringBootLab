@@ -1,4 +1,4 @@
-package com.rookies3.myspringbootlab.entity.dto;
+package com.rookies3.myspringbootlab.entity.viewmodel;
 
 public interface StudentSummaryVM {
     String getName();

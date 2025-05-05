@@ -2,6 +2,7 @@ package com.rookies3.myspringbootlab.repository;
 
 import com.rookies3.myspringbootlab.entity.Department;
 import com.rookies3.myspringbootlab.entity.Student;
+import com.rookies3.myspringbootlab.entity.viewmodel.DepartmentVM;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -53,7 +54,7 @@ public class DepartmentRepositoryTest {
         entityManager.flush();
         
         // Find by code
-        Department foundDepartment = departmentRepository.findByCode("EE");
+        DepartmentVM foundDepartment = departmentRepository.findByCode("EE");
         
         // Verify department found
         assertThat(foundDepartment).isNotNull();
