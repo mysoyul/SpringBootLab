@@ -5,5 +5,5 @@ import java.util.List;
 public interface DepartmentVM {
     String getName();
     String getCode();
-    List<StudentVM> getStudents();
+    List<StudentSummaryVM> getStudents();
 }
