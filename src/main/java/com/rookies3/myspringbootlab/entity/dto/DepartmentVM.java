@@ -6,5 +6,4 @@ public interface DepartmentVM {
     String getName();
     String getCode();
     List<StudentVM> getStudents();
-
 }

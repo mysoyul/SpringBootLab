@@ -1,5 +1,6 @@
 package com.rookies3.myspringbootlab.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -26,7 +27,8 @@ public class Publisher {
     private LocalDate establishedDate;
     
     private String address;
-    
+
+    @JsonIgnore
     @OneToMany(mappedBy = "publisher", cascade = CascadeType.ALL)
     private List<Book> books = new ArrayList<>();
 }

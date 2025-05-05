@@ -4,4 +4,5 @@ public interface StudentVM {
     String getName();
     String getStudentNumber();
 
+    DepartmentVM getDepartment();
 }
