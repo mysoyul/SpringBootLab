@@ -1,6 +1,7 @@
 package com.rookies3.myspringbootlab.controller;
 
 import com.rookies3.myspringbootlab.entity.Student;
+import com.rookies3.myspringbootlab.entity.viewmodel.StudentVM;
 import com.rookies3.myspringbootlab.repository.DepartmentRepository;
 import com.rookies3.myspringbootlab.repository.StudentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -73,10 +74,10 @@ public class StudentController {
     }
 
     @GetMapping("/department/{departmentId}")
-    public ResponseEntity<List<Student>> getStudentsByDepartment(@PathVariable Long departmentId) {
+    public ResponseEntity<List<StudentVM>> getStudentsByDepartment(@PathVariable Long departmentId) {
         return departmentRepository.findById(departmentId)
                 .map(department -> {
-                    List<Student> students = studentRepository.findByDepartment(department);
+                    List<StudentVM> students = studentRepository.findByDepartment(department);
                     return ResponseEntity.ok(students);
                 })
                 .orElse(ResponseEntity.notFound().build());

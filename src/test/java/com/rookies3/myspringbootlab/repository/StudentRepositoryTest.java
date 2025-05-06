@@ -2,6 +2,7 @@ package com.rookies3.myspringbootlab.repository;
 
 import com.rookies3.myspringbootlab.entity.Department;
 import com.rookies3.myspringbootlab.entity.Student;
+import com.rookies3.myspringbootlab.entity.viewmodel.StudentVM;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -92,7 +93,7 @@ public class StudentRepositoryTest {
         entityManager.flush();
         
         // Find students by department
-        List<Student> mathStudents = studentRepository.findByDepartment(mathDept);
+        List<StudentVM> mathStudents = studentRepository.findByDepartment(mathDept);
         
         // Verify correct students found
         assertThat(mathStudents).hasSize(2);
@@ -120,7 +121,7 @@ public class StudentRepositoryTest {
         entityManager.flush();
         
         // Find by student number
-        Student foundStudent = studentRepository.findByStudentNumber("20251006");
+        StudentVM foundStudent = studentRepository.findByStudentNumber("20251006");
         
         // Verify student found
         assertThat(foundStudent).isNotNull();
