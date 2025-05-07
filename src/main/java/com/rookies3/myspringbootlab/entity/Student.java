@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
+@Table(name = "students")
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder @Getter @Setter
@@ -19,8 +20,10 @@ public class Student {
     
     @Column(unique = true, nullable = false)
     private String studentNumber;
-    
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "department_id", nullable = false)
-    private Department department;
+
+    @OneToOne(mappedBy = "student", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private StudentDetail studentDetail;
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "department_id", nullable = false)
+//    private Department department;
 }

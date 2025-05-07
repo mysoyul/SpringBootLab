@@ -1,9 +1,10 @@
 package com.rookies3.myspringbootlab.controller;
 
-import com.rookies3.myspringbootlab.entity.Student;
-import com.rookies3.myspringbootlab.repository.DepartmentRepository;
-import com.rookies3.myspringbootlab.repository.StudentRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.rookies3.myspringbootlab.entity.dto.StudentDTO;
+import com.rookies3.myspringbootlab.service.StudentService;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -11,74 +12,46 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/students")
+@RequiredArgsConstructor
 public class StudentController {
 
-    @Autowired
-    private StudentRepository studentRepository;
-
-    @Autowired
-    private DepartmentRepository departmentRepository;
+    private final StudentService studentService;
 
     @GetMapping
-    public List<Student> getAllStudents() {
-        return studentRepository.findAll();
+    public ResponseEntity<List<StudentDTO.Response>> getAllStudents() {
+        List<StudentDTO.Response> students = studentService.getAllStudents();
+        return ResponseEntity.ok(students);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Student> getStudentById(@PathVariable Long id) {
-        return studentRepository.findById(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+    public ResponseEntity<StudentDTO.Response> getStudentById(@PathVariable Long id) {
+        StudentDTO.Response student = studentService.getStudentById(id);
+        return ResponseEntity.ok(student);
+    }
+
+    @GetMapping("/number/{studentNumber}")
+    public ResponseEntity<StudentDTO.Response> getStudentByStudentNumber(@PathVariable String studentNumber) {
+        StudentDTO.Response student = studentService.getStudentByStudentNumber(studentNumber);
+        return ResponseEntity.ok(student);
     }
 
     @PostMapping
-    public ResponseEntity<Student> createStudent(@RequestBody Student student) {
-        return departmentRepository.findById(student.getDepartment().getId())
-                .map(department -> {
-                    student.setDepartment(department);
-                    Student savedStudent = studentRepository.save(student);
-                    return ResponseEntity.ok(savedStudent);
-                })
-                .orElse(ResponseEntity.badRequest().build());
+    public ResponseEntity<StudentDTO.Response> createStudent(@Valid @RequestBody StudentDTO.Request request) {
+        StudentDTO.Response createdStudent = studentService.createStudent(request);
+        return new ResponseEntity<>(createdStudent, HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Student> updateStudent(@PathVariable Long id, @RequestBody Student studentDetails) {
-        return studentRepository.findById(id)
-                .map(student -> {
-                    if (studentDetails.getName() != null) {
-                        student.setName(studentDetails.getName());
-                    }
-                    if (studentDetails.getStudentNumber() != null) {
-                        student.setStudentNumber(studentDetails.getStudentNumber());
-                    }
-                    if (studentDetails.getDepartment() != null && studentDetails.getDepartment().getId() != null) {
-                        departmentRepository.findById(studentDetails.getDepartment().getId())
-                                .ifPresent(student::setDepartment);
-                    }
-                    Student updatedStudent = studentRepository.save(student);
-                    return ResponseEntity.ok(updatedStudent);
-                })
-                .orElse(ResponseEntity.notFound().build());
+    public ResponseEntity<StudentDTO.Response> updateStudent(
+            @PathVariable Long id,
+            @Valid @RequestBody StudentDTO.Request request) {
+        StudentDTO.Response updatedStudent = studentService.updateStudent(id, request);
+        return ResponseEntity.ok(updatedStudent);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteStudent(@PathVariable Long id) {
-        return studentRepository.findById(id)
-                .map(student -> {
-                    studentRepository.delete(student);
-                    return ResponseEntity.ok().<Void>build();
-                })
-                .orElse(ResponseEntity.notFound().build());
-    }
-
-    @GetMapping("/department/{departmentId}")
-    public ResponseEntity<List<Student>> getStudentsByDepartment(@PathVariable Long departmentId) {
-        return departmentRepository.findById(departmentId)
-                .map(department -> {
-                    List<Student> students = studentRepository.findByDepartment(department);
-                    return ResponseEntity.ok(students);
-                })
-                .orElse(ResponseEntity.notFound().build());
+        studentService.deleteStudent(id);
+        return ResponseEntity.noContent().build();
     }
 }

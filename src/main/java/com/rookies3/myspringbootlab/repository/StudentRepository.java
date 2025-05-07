@@ -3,12 +3,18 @@ package com.rookies3.myspringbootlab.repository;
 import com.rookies3.myspringbootlab.entity.Department;
 import com.rookies3.myspringbootlab.entity.Student;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface StudentRepository extends JpaRepository<Student, Long> {
-    
-    List<Student> findByDepartment(Department department);
-    
-    Student findByStudentNumber(String studentNumber);
+
+    Optional<Student> findByStudentNumber(String studentNumber);
+
+    @Query("SELECT s FROM Student s JOIN FETCH s.studentDetail WHERE s.id = :id")
+    Optional<Student> findByIdWithStudentDetail(@Param("id") Long id);
+
+    boolean existsByStudentNumber(String studentNumber);
 }

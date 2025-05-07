@@ -1,14 +1,13 @@
 package com.rookies3.myspringbootlab.repository;
 
-import com.rookies3.myspringbootlab.entity.Department;
 import com.rookies3.myspringbootlab.entity.Student;
+import com.rookies3.myspringbootlab.entity.StudentDetail;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.time.LocalDate;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -16,115 +15,120 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class StudentRepositoryTest {
 
     @Autowired
-    private TestEntityManager entityManager;
-
-    @Autowired
     private StudentRepository studentRepository;
 
+    @Autowired
+    private StudentDetailRepository studentDetailRepository;
+
     @Test
-    public void testSaveStudent() {
-        // Create a department
-        Department department = Department.builder()
-                .name("수학과")
-                .code("MATH")
-                .students(new ArrayList<>())
-                .build();
-        department = entityManager.persist(department);
-        
-        // Create a student
+    public void createStudentWithStudentDetail() {
+        // Given
         Student student = Student.builder()
-                .name("이영희")
-                .studentNumber("20251003")
-                .department(department)
+                .name("John Doe")
+                .studentNumber("S12345")
                 .build();
         
-        // Save student
-        Student savedStudent = studentRepository.save(student);
+        StudentDetail studentDetail = StudentDetail.builder()
+                .address("123 Main St")
+                .phoneNumber("555-1234")
+                .email("john.doe@example.com")
+                .dateOfBirth(LocalDate.of(1995, 5, 15))
+                .student(student)
+                .build();
         
-        // Verify student saved
+        student.setStudentDetail(studentDetail);
+
+        // When
+        Student savedStudent = studentRepository.save(student);
+
+        // Then
         assertThat(savedStudent).isNotNull();
         assertThat(savedStudent.getId()).isNotNull();
-        assertThat(savedStudent.getName()).isEqualTo("이영희");
-        assertThat(savedStudent.getStudentNumber()).isEqualTo("20251003");
-        assertThat(savedStudent.getDepartment().getName()).isEqualTo("수학과");
+        assertThat(savedStudent.getName()).isEqualTo("John Doe");
+        assertThat(savedStudent.getStudentNumber()).isEqualTo("S12345");
+        assertThat(savedStudent.getStudentDetail()).isNotNull();
+        assertThat(savedStudent.getStudentDetail().getAddress()).isEqualTo("123 Main St");
     }
 
     @Test
-    public void testFindByDepartment() {
-        // Create two departments
-        Department mathDept = Department.builder()
-                .name("수학과")
-                .code("MATH")
-                .students(new ArrayList<>())
-                .build();
-        
-        Department physicsDept = Department.builder()
-                .name("물리학과")
-                .code("PHYS")
-                .students(new ArrayList<>())
-                .build();
-        
-        mathDept = entityManager.persist(mathDept);
-        physicsDept = entityManager.persist(physicsDept);
-        
-        // Create students in each department
-        Student student1 = Student.builder()
-                .name("이영희")
-                .studentNumber("20251003")
-                .department(mathDept)
-                .build();
-        
-        Student student2 = Student.builder()
-                .name("박준호")
-                .studentNumber("20251004")
-                .department(mathDept)
-                .build();
-        
-        Student student3 = Student.builder()
-                .name("김지연")
-                .studentNumber("20251005")
-                .department(physicsDept)
-                .build();
-        
-        entityManager.persist(student1);
-        entityManager.persist(student2);
-        entityManager.persist(student3);
-        entityManager.flush();
-        
-        // Find students by department
-        List<Student> mathStudents = studentRepository.findByDepartment(mathDept);
-        
-        // Verify correct students found
-        assertThat(mathStudents).hasSize(2);
-        assertThat(mathStudents).extracting("name").containsOnly("이영희", "박준호");
-    }
-
-    @Test
-    public void testFindByStudentNumber() {
-        // Create a department
-        Department department = Department.builder()
-                .name("화학과")
-                .code("CHEM")
-                .students(new ArrayList<>())
-                .build();
-        department = entityManager.persist(department);
-        
-        // Create a student
+    public void findStudentByStudentNumber() {
+        // Given
         Student student = Student.builder()
-                .name("최민수")
-                .studentNumber("20251006")
-                .department(department)
+                .name("John Doe")
+                .studentNumber("S12345")
                 .build();
         
-        entityManager.persist(student);
-        entityManager.flush();
+        StudentDetail studentDetail = StudentDetail.builder()
+                .address("123 Main St")
+                .phoneNumber("555-1234")
+                .email("john.doe@example.com")
+                .dateOfBirth(LocalDate.of(1995, 5, 15))
+                .student(student)
+                .build();
         
-        // Find by student number
-        Student foundStudent = studentRepository.findByStudentNumber("20251006");
+        student.setStudentDetail(studentDetail);
+        studentRepository.save(student);
+
+        // When
+        Optional<Student> foundStudent = studentRepository.findByStudentNumber("S12345");
+
+        // Then
+        assertThat(foundStudent).isPresent();
+        assertThat(foundStudent.get().getName()).isEqualTo("John Doe");
+    }
+
+    @Test
+    public void findByIdWithStudentDetail() {
+        // Given
+        Student student = Student.builder()
+                .name("John Doe")
+                .studentNumber("S12345")
+                .build();
         
-        // Verify student found
-        assertThat(foundStudent).isNotNull();
-        assertThat(foundStudent.getName()).isEqualTo("최민수");
-        assertThat(foundStudent.getDepartment().getCode()).isEqualTo("CHEM");
+        StudentDetail studentDetail = StudentDetail.builder()
+                .address("123 Main St")
+                .phoneNumber("555-1234")
+                .email("john.doe@example.com")
+                .dateOfBirth(LocalDate.of(1995, 5, 15))
+                .student(student)
+                .build();
+        
+        student.setStudentDetail(studentDetail);
+        Student savedStudent = studentRepository.save(student);
+
+        // When
+        Optional<Student> foundStudent = studentRepository.findByIdWithStudentDetail(savedStudent.getId());
+
+        // Then
+        assertThat(foundStudent).isPresent();
+        assertThat(foundStudent.get().getStudentDetail()).isNotNull();
+        assertThat(foundStudent.get().getStudentDetail().getPhoneNumber()).isEqualTo("555-1234");
+    }
+    
+    @Test
+    public void findStudentDetailByStudentId() {
+        // Given
+        Student student = Student.builder()
+                .name("John Doe")
+                .studentNumber("S12345")
+                .build();
+        
+        StudentDetail studentDetail = StudentDetail.builder()
+                .address("123 Main St")
+                .phoneNumber("555-1234")
+                .email("john.doe@example.com")
+                .dateOfBirth(LocalDate.of(1995, 5, 15))
+                .student(student)
+                .build();
+        
+        student.setStudentDetail(studentDetail);
+        Student savedStudent = studentRepository.save(student);
+
+        // When
+        Optional<StudentDetail> foundStudentDetail = studentDetailRepository.findByStudentId(savedStudent.getId());
+
+        // Then
+        assertThat(foundStudentDetail).isPresent();
+        assertThat(foundStudentDetail.get().getEmail()).isEqualTo("john.doe@example.com");
     }
 }
