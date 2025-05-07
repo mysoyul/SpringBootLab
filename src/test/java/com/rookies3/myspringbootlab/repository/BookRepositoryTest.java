@@ -1,6 +1,7 @@
 package com.rookies3.myspringbootlab.repository;
 
 import com.rookies3.myspringbootlab.entity.Book;
+import com.rookies3.myspringbootlab.entity.viewmodel.book.BookVM;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -51,7 +52,7 @@ public class BookRepositoryTest {
         System.out.println(book);
         
         // When
-        Optional<Book> foundBook = bookRepository.findByIsbn("9788956746425");
+        Optional<BookVM> foundBook = bookRepository.findByIsbn("9788956746425");
         
         // Then
         assertThat(foundBook).isPresent();
@@ -87,7 +88,7 @@ public class BookRepositoryTest {
         bookRepository.save(book3);
         
         // When
-        List<Book> books = bookRepository.findByAuthor("홍길동");
+        List<BookVM> books = bookRepository.findByAuthor("홍길동");
         
         // Then
         assertThat(books).hasSize(2);

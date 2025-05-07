@@ -1,6 +1,7 @@
 package com.rookies3.myspringbootlab.controller;
 
 import com.rookies3.myspringbootlab.entity.Publisher;
+import com.rookies3.myspringbootlab.entity.viewmodel.book.PublisherVM;
 import com.rookies3.myspringbootlab.repository.PublisherRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -64,5 +65,10 @@ public class PublisherController {
         }
         Long count = publisherRepository.countBooksByPublisherId(id);
         return ResponseEntity.ok(Map.of("count", count));
+    }
+
+    @GetMapping("/name/{name}")
+    public ResponseEntity<PublisherVM> getPublisherById(@PathVariable String name) {
+        return ResponseEntity.ok(publisherRepository.findByName(name));
     }
 }

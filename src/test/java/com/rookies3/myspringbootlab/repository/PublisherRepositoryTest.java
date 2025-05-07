@@ -2,6 +2,7 @@ package com.rookies3.myspringbootlab.repository;
 
 import com.rookies3.myspringbootlab.entity.Book;
 import com.rookies3.myspringbootlab.entity.Publisher;
+import com.rookies3.myspringbootlab.entity.viewmodel.book.PublisherVM;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -56,7 +57,7 @@ public class PublisherRepositoryTest {
         entityManager.flush();
         
         // Find by name
-        Publisher foundPublisher = publisherRepository.findByName("위키북스");
+        PublisherVM foundPublisher = publisherRepository.findByName("위키북스");
         
         // Verify publisher found
         assertThat(foundPublisher).isNotNull();

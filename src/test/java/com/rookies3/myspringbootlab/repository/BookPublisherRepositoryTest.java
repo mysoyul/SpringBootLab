@@ -2,6 +2,7 @@ package com.rookies3.myspringbootlab.repository;
 
 import com.rookies3.myspringbootlab.entity.Book;
 import com.rookies3.myspringbootlab.entity.Publisher;
+import com.rookies3.myspringbootlab.entity.viewmodel.book.BookVM;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -10,8 +11,10 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @DataJpaTest
 public class BookPublisherRepositoryTest {
@@ -80,9 +83,11 @@ public class BookPublisherRepositoryTest {
         entityManager.flush();
 
         // Find by ISBN
-        Book foundBook = bookRepository.findByIsbn("9791165212308").orElse(new Book());
+        Optional<BookVM> optionalBook = bookRepository.findByIsbn("9791165212308");
 
         // Verify book found
+        assertTrue(optionalBook.isPresent());
+        BookVM foundBook = optionalBook.get();
         assertThat(foundBook).isNotNull();
         assertThat(foundBook.getTitle()).isEqualTo("모던 자바스크립트 Deep Dive");
         assertThat(foundBook.getAuthor()).isEqualTo("이웅모");
@@ -133,7 +138,7 @@ public class BookPublisherRepositoryTest {
         entityManager.flush();
 
         // Find books by author
-        List<Book> books = bookRepository.findByAuthor("마틴 파울러");
+        List<BookVM> books = bookRepository.findByAuthor("마틴 파울러");
 
         // Verify correct books found
         assertThat(books).hasSize(2);
@@ -194,7 +199,7 @@ public class BookPublisherRepositoryTest {
         entityManager.flush();
 
         // Find books by publisher
-        List<Book> manningBooks = bookRepository.findByPublisher(publisher1);
+        List<BookVM> manningBooks = bookRepository.findByPublisher(publisher1);
 
         // Verify correct books found
         assertThat(manningBooks).hasSize(2);

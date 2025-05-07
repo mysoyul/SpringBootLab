@@ -1,6 +1,7 @@
 package com.rookies3.myspringbootlab.controller;
 
 import com.rookies3.myspringbootlab.entity.Book;
+import com.rookies3.myspringbootlab.entity.viewmodel.book.BookVM;
 import com.rookies3.myspringbootlab.repository.BookRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -33,15 +34,15 @@ public class BookController {
     
     // ISBN 으로 도서 조회
     @GetMapping("/isbn/{isbn}")
-    public ResponseEntity<Book> getBookByIsbn(@PathVariable String isbn) {
-        Optional<Book> book = bookRepository.findByIsbn(isbn);
+    public ResponseEntity<BookVM> getBookByIsbn(@PathVariable String isbn) {
+        Optional<BookVM> book = bookRepository.findByIsbn(isbn);
         return book.map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
     
     // 저자명으로 도서 조회
     @GetMapping("/author/{author}")
-    public List<Book> getBooksByAuthor(@PathVariable String author) {
+    public List<BookVM> getBooksByAuthor(@PathVariable String author) {
         return bookRepository.findByAuthor(author);
     }
     
