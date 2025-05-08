@@ -25,7 +25,8 @@ public class StudentService {
         return studentRepository.findAll()
                 .stream()
                 .map(StudentDTO.Response::fromEntity)
-                .collect(Collectors.toList());
+                .toList();
+                //.collect(Collectors.toList());
     }
 
     public StudentDTO.Response getStudentById(Long id) {
@@ -50,12 +51,14 @@ public class StudentService {
             request.getDetailRequest().getEmail() != null && 
             !request.getDetailRequest().getEmail().isEmpty() && 
             studentDetailRepository.existsByEmail(request.getDetailRequest().getEmail())) {
-            throw new BusinessException("Student detail already exists with email: " + request.getDetailRequest().getEmail());
+            throw new BusinessException("Student detail already exists with email: " +
+                    request.getDetailRequest().getEmail());
         }
 
         if (request.getDetailRequest() != null && 
             studentDetailRepository.existsByPhoneNumber(request.getDetailRequest().getPhoneNumber())) {
-            throw new BusinessException("Student detail already exists with phone number: " + request.getDetailRequest().getPhoneNumber());
+            throw new BusinessException("Student detail already exists with phone number: " +
+                    request.getDetailRequest().getPhoneNumber());
         }
 
         Student student = Student.builder()
@@ -87,7 +90,8 @@ public class StudentService {
         // Check if another student already has the student number
         if (!student.getStudentNumber().equals(request.getStudentNumber()) && 
                 studentRepository.existsByStudentNumber(request.getStudentNumber())) {
-            throw new BusinessException("Student already exists with student number: " + request.getStudentNumber());
+            throw new BusinessException("Student already exists with student number: " +
+                    request.getStudentNumber());
         }
 
         student.setName(request.getName());
