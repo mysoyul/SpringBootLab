@@ -1,7 +1,7 @@
 package com.rookies3.myspringbootlab.service;
 
 import com.rookies3.myspringbootlab.entity.Book;
-import com.rookies3.myspringbootlab.entity.dto.BookDTO;
+import com.rookies3.myspringbootlab.controller.dto.BookDTO;
 import com.rookies3.myspringbootlab.exception.BusinessException;
 import com.rookies3.myspringbootlab.repository.BookRepository;
 import lombok.RequiredArgsConstructor;

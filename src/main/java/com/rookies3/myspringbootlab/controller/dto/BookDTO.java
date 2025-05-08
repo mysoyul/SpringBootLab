@@ -1,4 +1,4 @@
-package com.rookies3.myspringbootlab.entity.dto;
+package com.rookies3.myspringbootlab.controller.dto;
 
 import com.rookies3.myspringbootlab.entity.Book;
 import jakarta.validation.constraints.NotBlank;
