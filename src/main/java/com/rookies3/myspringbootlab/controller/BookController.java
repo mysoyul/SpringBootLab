@@ -1,6 +1,7 @@
 package com.rookies3.myspringbootlab.controller;
 
 import com.rookies3.myspringbootlab.entity.Book;
+import com.rookies3.myspringbootlab.exception.BusinessException;
 import com.rookies3.myspringbootlab.repository.BookRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -26,17 +27,16 @@ public class BookController {
     // ID로 도서 조회
     @GetMapping("/{id}")
     public ResponseEntity<Book> getBookById(@PathVariable Long id) {
-        Optional<Book> book = bookRepository.findById(id);
-        return book.map(ResponseEntity::ok)
+        Optional<Book> optionalBook = bookRepository.findById(id);
+        return optionalBook.map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
     
     // ISBN으로 도서 조회
     @GetMapping("/isbn/{isbn}")
-    public ResponseEntity<Book> getBookByIsbn(@PathVariable String isbn) {
-        Optional<Book> book = bookRepository.findByIsbn(isbn);
-        return book.map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+    public Book getBookByIsbn(@PathVariable String isbn) {
+        return bookRepository.findByIsbn(isbn)
+                .orElseThrow(() -> new BusinessException("Book Not Found", HttpStatus.NOT_FOUND));
     }
     
     // 저자명으로 도서 조회
@@ -53,13 +53,13 @@ public class BookController {
     }
     
     // 도서 정보 수정
-    @PutMapping("/{id}")
-    public ResponseEntity<Book> updateBook(@PathVariable Long id, @RequestBody Book book) {
-        if (!bookRepository.existsById(id)) {
-            return ResponseEntity.notFound().build();
-        }
-        //book.setId(id); // ID 설정
-        Book updatedBook = bookRepository.save(book);
+    @PatchMapping("/{id}")
+    public ResponseEntity<Book> updateBook(@PathVariable Long id, @RequestBody Book bookDetail) {
+        Book existBook = bookRepository.findById(id)
+                .orElseThrow(() -> new BusinessException("Book Not Found", HttpStatus.NOT_FOUND));
+        existBook.setPrice(bookDetail.getPrice());
+
+        Book updatedBook = bookRepository.save(existBook);
         return ResponseEntity.ok(updatedBook);
     }
     
