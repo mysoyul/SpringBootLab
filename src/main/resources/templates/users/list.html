@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>사용자 목록</title>
+</head>
+<body>
+<div th:replace="~{layout :: html}" th:with="title='사용자 목록', pageTitle='사용자 목록'">
+    <div id="content">
+        <div class="mb-3">
+            <a th:href="@{/users/create}" class="btn btn-primary">
+                <i class="bi bi-plus-circle"></i> 사용자 등록
+            </a>
+        </div>
+
+        <div class="card">
+            <div class="card-body">
+                <div th:if="${#lists.isEmpty(users)}" class="alert alert-info">
+                    등록된 사용자가 없습니다.
+                </div>
+
+                <div th:unless="${#lists.isEmpty(users)}">
+                    <table class="table table-striped table-hover">
+                        <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>이름</th>
+                            <th>이메일</th>
+                            <th>등록일</th>
+                            <th>관리</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="user : ${users}">
+                            <td th:text="${user.id}">1</td>
+                            <td th:text="${user.name}">홍길동</td>
+                            <td th:text="${user.email}">hong@example.com</td>
+                            <td th:text="${#temporals.format(user.createdAt, 'yyyy-MM-dd HH:mm')}">2023-01-01 12:00</td>
+                            <td>
+                                <a th:href="@{/users/{id}(id=${user.id})}" class="btn btn-sm btn-info btn-action">상세</a>
+                                <a th:href="@{/users/{id}/edit(id=${user.id})}" class="btn btn-sm btn-warning btn-action">수정</a>
+                                <a th:href="@{/users/{id}/delete(id=${user.id})}" class="btn btn-sm btn-danger btn-action">삭제</a>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>사용자 삭제 확인</title>
+</head>
+<body>
+<div th:replace="~{layout :: html}" th:with="title='사용자 삭제', pageTitle='사용자 삭제 확인'">
+    <div id="content">
+        <div class="card border-danger">
+            <div class="card-header bg-danger text-white">
+                <h5 class="mb-0">주의: 이 작업은 되돌릴 수 없습니다.</h5>
+            </div>
+            <div class="card-body">
+                <h5 class="card-title">다음 사용자를 삭제하시겠습니까?</h5>
+
+                <div class="mb-3">
+                    <label class="form-label fw-bold">ID</label>
+                    <p th:text="${user.id}" class="form-control-plaintext">1</p>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label fw-bold">이름</label>
+                    <p th:text="${user.name}" class="form-control-plaintext">홍길동</p>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label fw-bold">이메일</label>
+                    <p th:text="${user.email}" class="form-control-plaintext">hong@example.com</p>
+                </div>
+
+                <form th:action="@{/users/{id}/delete(id=${user.id})}" method="post">
+                    <div class="d-flex justify-content-between">
+                        <a th:href="@{/users/{id}(id=${user.id})}" class="btn btn-secondary">취소</a>
+                        <button type="submit" class="btn btn-danger">삭제 확인</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
