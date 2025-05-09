@@ -41,12 +41,15 @@ public class UserController {
     @GetMapping
     public List<UserDTO.UserResponse> getUsers() {
         return userService.getAllUsers().stream()
+                //.map(user -> new UserDTO.UserResponse(user))
                 .map(UserDTO.UserResponse::new)
-                .collect(Collectors.toList());
+                .toList();
+                //.collect(Collectors.toList());
     }
 
     @PatchMapping("/email/{email}/")
-    public UserDTO.UserResponse updateUser(@PathVariable String email, @Valid @RequestBody UserDTO.UserUpdateRequest request) {
+    public UserDTO.UserResponse updateUser(@PathVariable String email,
+                                           @Valid @RequestBody UserDTO.UserUpdateRequest request) {
         User userDetail = new User();
         userDetail.setName(request.getName());
         

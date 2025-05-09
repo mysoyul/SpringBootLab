@@ -32,8 +32,7 @@ public class UserService {
 
     @Transactional
     public User updateUserByEmail(String email, User userDetail) {
-        User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new BusinessException("User Not Found", HttpStatus.NOT_FOUND));
+        User user = getUserByEmail(email);
 
         user.setName(userDetail.getName());
         return userRepository.save(user);
@@ -45,7 +44,7 @@ public class UserService {
         userRepository.delete(user);
     }
 
-    public User findByEmail(String email) {
+    public User getUserByEmail(String email) {
         return userRepository.findByEmail(email)
                 .orElseThrow(() -> new BusinessException("User Not Found", HttpStatus.NOT_FOUND));
     }
