@@ -1,8 +1,7 @@
-package com.rookies3.myspringbootlab.controller;
-
 import com.rookies3.myspringbootlab.controller.dto.UserDTO;
 import com.rookies3.myspringbootlab.entity.User;
 import com.rookies3.myspringbootlab.service.UserService;
+
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -34,6 +33,7 @@ public class UserThymeleafController {
     @GetMapping("/create")
     public String createUserForm(Model model) {
         model.addAttribute("userCreateRequest", new UserDTO.UserCreateRequest());
+        model.addAttribute("pageTitle", "사용자 등록");
         return "users/create";
     }
 
@@ -50,7 +50,7 @@ public class UserThymeleafController {
             User user = new User();
             user.setName(request.getName());
             user.setEmail(request.getEmail());
-            
+
             userService.createUser(user);
             redirectAttributes.addFlashAttribute("successMessage", "사용자가 성공적으로 등록되었습니다.");
             return "redirect:/users";
@@ -65,6 +65,7 @@ public class UserThymeleafController {
     public String getUserDetails(@PathVariable Long id, Model model) {
         User user = userService.getUserById(id);
         model.addAttribute("user", new UserDTO.UserResponse(user));
+        model.addAttribute("pageTitle", "사용자 상세 정보");
         return "users/detail";
     }
 
@@ -72,13 +73,14 @@ public class UserThymeleafController {
     @GetMapping("/{id}/edit")
     public String editUserForm(@PathVariable Long id, Model model) {
         User user = userService.getUserById(id);
-        
+
         UserDTO.UserUpdateRequest updateRequest = new UserDTO.UserUpdateRequest();
         updateRequest.setName(user.getName());
-        
+
         model.addAttribute("userUpdateRequest", updateRequest);
         model.addAttribute("userId", id);
         model.addAttribute("userEmail", user.getEmail());
+        model.addAttribute("pageTitle", "사용자 수정");
         return "users/edit";
     }
 
@@ -95,10 +97,10 @@ public class UserThymeleafController {
         try {
             User userDetail = new User();
             userDetail.setName(request.getName());
-            
+
             User user = userService.getUserById(id);
             userService.updateUserByEmail(user.getEmail(), userDetail);
-            
+
             redirectAttributes.addFlashAttribute("successMessage", "사용자 정보가 성공적으로 수정되었습니다.");
             return "redirect:/users";
         } catch (Exception e) {
@@ -112,6 +114,7 @@ public class UserThymeleafController {
     public String deleteConfirmForm(@PathVariable Long id, Model model) {
         User user = userService.getUserById(id);
         model.addAttribute("user", new UserDTO.UserResponse(user));
+        model.addAttribute("pageTitle", "사용자 삭제 확인");
         return "users/delete-confirm";
     }
 
