@@ -1,6 +1,5 @@
 package com.rookies3.myspringbootlab.entity;
 
-import com.rookies3.myspringbootlab.entity.BookDetail;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

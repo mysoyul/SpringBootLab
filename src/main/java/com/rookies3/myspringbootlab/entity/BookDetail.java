@@ -3,8 +3,6 @@ package com.rookies3.myspringbootlab.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.awt.print.Book;
-
 @Entity
 @Table(name = "book_details")
 @NoArgsConstructor
