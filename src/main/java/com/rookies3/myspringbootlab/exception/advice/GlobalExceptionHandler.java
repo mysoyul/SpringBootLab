@@ -17,15 +17,15 @@ import java.util.Map;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    @ExceptionHandler(BusinessException.class)
-    public ResponseEntity<ErrorResponse> handleBusinessException(BusinessException ex) {
-        ErrorResponse errorResponse = new ErrorResponse(
-                ex.getHttpStatus().value(),
-                ex.getMessage(),
-                LocalDateTime.now()
-        );
-        return new ResponseEntity<>(errorResponse, ex.getHttpStatus());
-    }
+//    @ExceptionHandler(BusinessException.class)
+//    public ResponseEntity<ErrorResponse> handleBusinessException(BusinessException ex) {
+//        ErrorResponse errorResponse = new ErrorResponse(
+//                ex.getHttpStatus().value(),
+//                ex.getMessage(),
+//                LocalDateTime.now()
+//        );
+//        return new ResponseEntity<>(errorResponse, ex.getHttpStatus());
+//    }
     
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ValidationErrorResponse> handleValidationExceptions(
