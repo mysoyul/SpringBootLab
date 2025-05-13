@@ -81,7 +81,7 @@ public class DepartmentController {
     }
 
     @GetMapping(value = "/name/{name}")
-    public DepartmentVM getDepartmentByName(@PathVariable String name) {
+    public Department getDepartmentByName(@PathVariable String name) {
         return departmentRepository.findByName(name);
     }
 }
