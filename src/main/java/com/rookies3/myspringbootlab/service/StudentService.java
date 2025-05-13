@@ -32,13 +32,15 @@ public class StudentService {
 
     public StudentDTO.Response getStudentById(Long id) {
         Student student = studentRepository.findByIdWithStudentDetail(id)
-                .orElseThrow(() -> new BusinessException(ErrorCode.RESOURCE_NOT_FOUND, "Student", "id", id));
+                .orElseThrow(() -> new BusinessException(ErrorCode.RESOURCE_NOT_FOUND,
+                        "Student", "id", id));
         return StudentDTO.Response.fromEntity(student);
     }
 
     public StudentDTO.Response getStudentByStudentNumber(String studentNumber) {
         Student student = studentRepository.findByStudentNumber(studentNumber)
-                .orElseThrow(() -> new BusinessException(ErrorCode.RESOURCE_NOT_FOUND, "Student", "student number", studentNumber));
+                .orElseThrow(() -> new BusinessException(ErrorCode.RESOURCE_NOT_FOUND,
+                        "Student", "student number", studentNumber));
         return StudentDTO.Response.fromEntity(student);
     }
 
@@ -46,17 +48,20 @@ public class StudentService {
     public StudentDTO.Response createStudent(StudentDTO.Request request) {
         // Validate student number is not already in use
         if (studentRepository.existsByStudentNumber(request.getStudentNumber())) {
-            throw new BusinessException(ErrorCode.STUDENT_NUMBER_DUPLICATE, request.getStudentNumber());
+            throw new BusinessException(ErrorCode.STUDENT_NUMBER_DUPLICATE,
+                    request.getStudentNumber());
         }
 
         // Validate email is not already in use (if provided)
         if (hasEmailAndExists(request.getDetailRequest())) {
-            throw new BusinessException(ErrorCode.EMAIL_DUPLICATE, request.getDetailRequest().getEmail());
+            throw new BusinessException(ErrorCode.EMAIL_DUPLICATE,
+                    request.getDetailRequest().getEmail());
         }
 
         // Validate phone number is not already in use
         if (hasDetailAndPhoneNumberExists(request.getDetailRequest())) {
-            throw new BusinessException(ErrorCode.PHONE_NUMBER_DUPLICATE, request.getDetailRequest().getPhoneNumber());
+            throw new BusinessException(ErrorCode.PHONE_NUMBER_DUPLICATE,
+                    request.getDetailRequest().getPhoneNumber());
         }
 
         // Create student entity
@@ -87,12 +92,14 @@ public class StudentService {
     public StudentDTO.Response updateStudent(Long id, StudentDTO.Request request) {
         // Find the student
         Student student = studentRepository.findById(id)
-                .orElseThrow(() -> new BusinessException(ErrorCode.RESOURCE_NOT_FOUND, "Student", "id", id));
+                .orElseThrow(() -> new BusinessException(ErrorCode.RESOURCE_NOT_FOUND,
+                        "Student", "id", id));
 
         // Check if another student already has the student number
         if (!student.getStudentNumber().equals(request.getStudentNumber()) &&
                 studentRepository.existsByStudentNumber(request.getStudentNumber())) {
-            throw new BusinessException(ErrorCode.STUDENT_NUMBER_DUPLICATE, request.getStudentNumber());
+            throw new BusinessException(ErrorCode.STUDENT_NUMBER_DUPLICATE,
+                    request.getStudentNumber());
         }
 
         // Update student basic info
@@ -112,12 +119,14 @@ public class StudentService {
 
             // Validate email is not already in use (if changing)
             if (isEmailChangingAndExists(studentDetail, request.getDetailRequest())) {
-                throw new BusinessException(ErrorCode.EMAIL_DUPLICATE, request.getDetailRequest().getEmail());
+                throw new BusinessException(ErrorCode.EMAIL_DUPLICATE,
+                        request.getDetailRequest().getEmail());
             }
 
             // Validate phone number is not already in use (if changing)
             if (isPhoneNumberChangingAndExists(studentDetail, request.getDetailRequest())) {
-                throw new BusinessException(ErrorCode.PHONE_NUMBER_DUPLICATE, request.getDetailRequest().getPhoneNumber());
+                throw new BusinessException(ErrorCode.PHONE_NUMBER_DUPLICATE,
+                        request.getDetailRequest().getPhoneNumber());
             }
 
             // Update detail fields
@@ -135,7 +144,8 @@ public class StudentService {
     @Transactional
     public void deleteStudent(Long id) {
         if (!studentRepository.existsById(id)) {
-            throw new BusinessException(ErrorCode.RESOURCE_NOT_FOUND, "Student", "id", id);
+            throw new BusinessException(ErrorCode.RESOURCE_NOT_FOUND,
+                    "Student", "id", id);
         }
         studentRepository.deleteById(id);
     }
