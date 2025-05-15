@@ -1,17 +1,16 @@
 package com.rookies3.myspringbootlab.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 @Entity
 @Table(name = "students")
-@Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@Getter @Setter
 public class Student {
     
     @Id
@@ -25,5 +24,10 @@ public class Student {
     private String studentNumber;
     
     @OneToOne(mappedBy = "student", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @Fetch(FetchMode.SELECT) // Hibernate 어노테이션으로 지연 로딩 강제
     private StudentDetail studentDetail;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "department_id")
+    private Department department;
 }
