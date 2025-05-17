@@ -12,12 +12,12 @@ public class MySpringBootLabApplication {
 		SpringApplication.run(MySpringBootLabApplication.class, args);
 	}
 
-	@Bean
-	Hibernate6Module hibernate6Module() {
-		Hibernate6Module hibernate6Module = new Hibernate6Module();
-		hibernate6Module.configure(Hibernate6Module.Feature.FORCE_LAZY_LOADING,true);
-		return hibernate6Module;
-	}
+//	@Bean
+//	Hibernate6Module hibernate6Module() {
+//		Hibernate6Module hibernate6Module = new Hibernate6Module();
+//		hibernate6Module.configure(Hibernate6Module.Feature.FORCE_LAZY_LOADING,true);
+//		return hibernate6Module;
+//	}
 
 
 }
