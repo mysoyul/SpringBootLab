@@ -38,7 +38,7 @@ public class BookDTO {
         private Long publisherId;
 
         @Valid
-        private BookDetailDTO detailRequest;
+        private BookDetailDTO detail;
     }
 
     @Data
