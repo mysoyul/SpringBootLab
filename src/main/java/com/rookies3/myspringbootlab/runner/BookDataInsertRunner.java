@@ -19,7 +19,7 @@ import java.util.List;
  * @Order(3) - DataInitRunner, BookDataInitRunner 다음에 실행되도록 설정
  */
 @Component
-@Order(3) // 다른 러너들 다음에 실행
+@Order(1) // 다른 러너들 다음에 실행
 @RequiredArgsConstructor
 @Slf4j
 public class BookDataInsertRunner implements CommandLineRunner {

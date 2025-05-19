@@ -12,7 +12,7 @@ import java.util.Optional;
 public interface StudentRepository extends JpaRepository<Student, Long> {
     Optional<Student> findByStudentNumber(String studentNumber);
     
-    @Query("SELECT s FROM Student s JOIN FETCH s.studentDetail WHERE s.id = :id")
+    @Query("SELECT s FROM Student s LEFT JOIN FETCH s.studentDetail WHERE s.id = :id")
     Optional<Student> findByIdWithStudentDetail(@Param("id") Long id);
     
     boolean existsByStudentNumber(String studentNumber);
