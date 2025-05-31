@@ -9,6 +9,8 @@ import com.rookies3.myspringbootlab.exception.ErrorCode;
 import com.rookies3.myspringbootlab.repository.DepartmentRepository;
 import com.rookies3.myspringbootlab.repository.StudentRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,14 +25,23 @@ public class DepartmentService {
     private final DepartmentRepository departmentRepository;
     private final StudentRepository studentRepository;
 
-//        public List<DepartmentDTO.SimpleResponse> getAllDepartments() {
-//        return departmentRepository.findAll()
-//                .stream()
-//                .map(DepartmentDTO.SimpleResponse::fromEntity)
-//                .toList();
-//    }
+    // 페이징 처리된 모든 학과 조회
+    public Page<DepartmentDTO.SimpleResponse> getAllDepartments(Pageable pageable) {
+        Page<Department> departments = departmentRepository.findAll(pageable);
 
-    // 모든 학과 조회 - 학생 정보 제외, 별도 카운트 조회
+        return departments.map(department -> {
+            // 학생 수만 별도로 조회하여 students 컬렉션에 접근하지 않음
+            Long studentCount = studentRepository.countByDepartmentId(department.getId());
+            return DepartmentDTO.SimpleResponse.builder()
+                    .id(department.getId())
+                    .name(department.getName())
+                    .code(department.getCode())
+                    .studentCount(studentCount)
+                    .build();
+        });
+    }
+
+    // 모든 학과 조회 - 학생 정보 제외, 별도 카운트 조회 (페이징 없는 버전)
     public List<DepartmentDTO.SimpleResponse> getAllDepartments() {
         List<Department> departments = departmentRepository.findAll();
 
@@ -48,35 +59,35 @@ public class DepartmentService {
                 .toList();
     }
 
-    public DepartmentDTO.Response getDepartmentById(Long id) {
-        Department department = departmentRepository.findByIdWithStudents(id)
-                .orElseThrow(() -> new BusinessException(ErrorCode.RESOURCE_NOT_FOUND,
-                        "Department", "id", id));
-        return DepartmentDTO.Response.fromEntity(department);
-    }
-
-    // 방법 2: Department만 조회하고 Student를 별도 조회
 //    public DepartmentDTO.Response getDepartmentById(Long id) {
-//        Department department = departmentRepository.findById(id)
+//        Department department = departmentRepository.findByIdWithStudents(id)
 //                .orElseThrow(() -> new BusinessException(ErrorCode.RESOURCE_NOT_FOUND,
 //                        "Department", "id", id));
-//
-//        // Department의 Students 컬렉션에 접근하지 않고 별도로 조회
-//        List<Student> students = studentRepository.findByDepartmentId(id);
-//
-//        // StudentDetail 없이 SimpleResponse만 생성
-//        List<StudentDTO.SimpleResponse> studentResponses = students.stream()
-//                .map(StudentDTO.SimpleResponse::fromEntity)
-//                .toList();
-//
-//        return DepartmentDTO.Response.builder()
-//                .id(department.getId())
-//                .name(department.getName())
-//                .code(department.getCode())
-//                .studentCount((long) students.size())
-//                .students(studentResponses)
-//                .build();
+//        return DepartmentDTO.Response.fromEntity(department);
 //    }
+
+    // 방법 2: Department 만 조회하고 Student 를 별도 조회
+    public DepartmentDTO.Response getDepartmentById(Long id) {
+        Department department = departmentRepository.findById(id)
+                .orElseThrow(() -> new BusinessException(ErrorCode.RESOURCE_NOT_FOUND,
+                        "Department", "id", id));
+
+        // Department 의 Students 컬렉션에 접근하지 않고 별도로 조회
+        List<Student> students = studentRepository.findByDepartmentId(id);
+
+        // StudentDetail 없이 SimpleResponse 만 생성
+        List<StudentDTO.SimpleResponse> studentResponses = students.stream()
+                .map(StudentDTO.SimpleResponse::fromEntity)
+                .toList();
+
+        return DepartmentDTO.Response.builder()
+                .id(department.getId())
+                .name(department.getName())
+                .code(department.getCode())
+                .studentCount((long) students.size())
+                .students(studentResponses)
+                .build();
+    }
 
 
     public DepartmentDTO.Response getDepartmentByCode(String code) {
