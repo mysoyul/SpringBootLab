@@ -8,6 +8,7 @@ import com.rookies3.myspringbootlab.repository.StudentRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.context.annotation.Profile;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,7 +20,8 @@ import java.util.List;
 @Order(2)
 @RequiredArgsConstructor
 @Slf4j
-public class DataInitRunner implements CommandLineRunner {
+@Profile("test")
+public class StudentDetailDataInitRunner implements CommandLineRunner {
 
     private final DepartmentRepository departmentRepository;
     private final StudentRepository studentRepository;
