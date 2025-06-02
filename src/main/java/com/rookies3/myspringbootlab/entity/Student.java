@@ -1,5 +1,6 @@
 package com.rookies3.myspringbootlab.entity;
 
+import com.rookies3.myspringbootlab.security.entity.UserInfo;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.Fetch;
@@ -30,4 +31,9 @@ public class Student {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "department_id")
     private Department department;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_info_id")
+    private UserInfo userInfo;
+
 }

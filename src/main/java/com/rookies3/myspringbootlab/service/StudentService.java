@@ -9,6 +9,7 @@ import com.rookies3.myspringbootlab.exception.ErrorCode;
 import com.rookies3.myspringbootlab.repository.DepartmentRepository;
 import com.rookies3.myspringbootlab.repository.StudentDetailRepository;
 import com.rookies3.myspringbootlab.repository.StudentRepository;
+import com.rookies3.myspringbootlab.security.entity.UserInfo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -81,7 +82,7 @@ public class StudentService {
     }
 
     @Transactional
-    public StudentDTO.Response createStudent(StudentDTO.Request request) {
+    public StudentDTO.Response createStudent(StudentDTO.Request request, UserInfo currentUser) {
         // Validate department exists
         Department department = departmentRepository.findById(request.getDepartmentId())
                 .orElseThrow(() -> new BusinessException(ErrorCode.RESOURCE_NOT_FOUND,
@@ -105,11 +106,15 @@ public class StudentService {
                     request.getDetailRequest().getPhoneNumber());
         }
 
+//        UserInfo managedUser = userInfoRepository.findById(currentUser.getId())
+//                .orElseThrow(() -> new BusinessException(...));
+
         // Create student entity
         Student student = Student.builder()
                 .name(request.getName())
                 .studentNumber(request.getStudentNumber())
                 .department(department)
+                .userInfo(currentUser)
                 .build();
 
         // Create student detail if provided
