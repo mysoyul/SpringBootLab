@@ -10,6 +10,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -32,12 +33,14 @@ public class StudentController {
 
     // 기존 메서드 유지 (페이징 없는 버전)
     @GetMapping
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public ResponseEntity<List<StudentDTO.Response>> getAllStudents() {
         List<StudentDTO.Response> students = studentService.getAllStudents();
         return ResponseEntity.ok(students);
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasAuthority('ROLE_USER')")
     public ResponseEntity<StudentDTO.Response> getStudentById(@PathVariable Long id) {
         StudentDTO.Response student = studentService.getStudentById(id);
         return ResponseEntity.ok(student);
